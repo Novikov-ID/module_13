@@ -6,7 +6,7 @@ import asyncio
 
 api = ''
 bot = Bot(token=api)
-ds = Dispatcher(bot, storage=MemoryStorage())
+dp = Dispatcher(bot, storage=MemoryStorage())
 
 
 class UserState(StateGroup):

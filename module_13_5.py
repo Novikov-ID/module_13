@@ -1,19 +1,14 @@
+from config import api
 from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-api = ''
+
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-kb = ReplyKeyboardMarkup(resize_keyboard=True)
-button1 = KeyboardButton(text='Информация')
-button2 = KeyboardButton(text='Расчитать')
-kb.row(button1, button2)
 
-
-class UserState(StateGroup):
+class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()
@@ -22,15 +17,11 @@ class UserState(StateGroup):
 
 @dp.message_handler(commands=['start'])
 async def start(message):
-    await message.answer('Привет! Я бот помогающий твоему здоровью.', reply_markup=kb)
+    await message.answer('Привет! Я бот помогающий твоему здоровью.')
+    await message.answer('Для подсчета нормы калорий введите: Calories')
 
 
-@dp.message_handler(text=['Информация'])
-async def start_message(message):
-    await message.answer('Рассчёт суточной нормы калорий по упрощённой формулу Миффлина - Сан Жеора.')
-
-
-@dp.message_handler(text='Расчитать')
+@dp.message_handler(text='Calories')
 async def set_age(message):
     await message.answer('Введите свой возраст:')
     await UserState.age.set()

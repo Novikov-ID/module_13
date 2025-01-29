@@ -1,15 +1,14 @@
-from aiogram import Bot, Dispatcher, executor, types
+from config import api
+from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filtres.state import State, StateGroup
-from aiogram.dispatcher import FSMContext
-import asyncio
+from aiogram.dispatcher.filters.state import State, StatesGroup
 
-api = ''
+
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
-class UserState(StateGroup):
+class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()

@@ -1,25 +1,25 @@
+from config import api
 from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton,ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-api = ''
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 kb = ReplyKeyboardMarkup(resize_keyboard=True)
-button1 = KeyboardButton( text='Информация')
-button2 = KeyboardButton( text='Расчитать')
+button1 = KeyboardButton(text='Информация')
+button2 = KeyboardButton(text='Раccчитать')
 kb.row(button1, button2)
 
 kb_in = InlineKeyboardMarkup()
-button1 = InlineKeyboardButton(text='Расчитать норму калорий',callback_data='calories')
-button2 = InlineKeyboardButton(text='Формулы расчёта',callback_data='formulas')
-kb_in.add(button1,button2)
+in_button1 = InlineKeyboardButton(text='Расcчитать норму калорий', callback_data='calories')
+in_button2 = InlineKeyboardButton(text='Формулы расчёта', callback_data='formulas')
+kb_in.add(in_button1, in_button2)
 
 
-class UserState(StateGroup):
+class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()
@@ -30,21 +30,25 @@ class UserState(StateGroup):
 async def start(message):
     await message.answer('Привет! Я бот помогающий твоему здоровью.', reply_markup=kb)
 
+
 @dp.message_handler(text=['Информация'])
 async def info_message(message):
-    await message.answer('Рассчёт суточной нормы калорий по упрощённой формулу Миффлина - Сан Жеора.')
+    await message.answer('Рассчёт суточной нормы калорий по упрощённой формуле Миффлина - Сан Жеора.')
 
-@dp.message_handler(text=['Рассчитать'])
+
+@dp.message_handler(text=['Раccчитать'])
 async def main_menu(message):
-    await message.answer('Выберите опцию:',reply_markup=kb_in)
+    await message.answer('Выберите опцию:', reply_markup=kb_in)
+
 
 @dp.callback_query_handler(text=['formulas'])
 async def get_formulas(call):
     await call.message.answer(f'Для мужчин:\n\t'
-                                 f'10*вес + 6.25*рост - 5*возраст + 5\n'
-                                 f'Для женщин:\n\t'
-                                 f'10*вес + 6.25*рост - 5*возраст -161')
+                              f'10*вес + 6.25*рост - 5*возраст + 5\n'
+                              f'Для женщин:\n\t'
+                              f'10*вес + 6.25*рост - 5*возраст -161')
     await call.answer()
+
 
 @dp.callback_query_handler(text='calories')
 async def set_age(call):
